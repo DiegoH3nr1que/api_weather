@@ -3,7 +3,6 @@ from django.db import models
 
 class WeatherEntity:
 
-   
     def __init__(self, temperature, date,
                  city='', atmosphericPressure=0,
                  humidity=0, weather='') -> None:

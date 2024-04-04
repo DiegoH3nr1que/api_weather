@@ -64,3 +64,14 @@ class WeatherInsert(View):
             print(weatherForm.errors)
 
         return redirect('Weather View')
+    
+class WeatherDelete(View):
+    def delete(self, request, weather_id):
+        # Obter o repositório de clima
+        repository = WeatherRepository(collectionName='weathers')
+        
+        # Excluir o registro de clima com o ID fornecido
+        repository.delete_one(weather_id)
+        
+        # Redirecionar de volta para a página principal
+        return redirect('Weather View')
