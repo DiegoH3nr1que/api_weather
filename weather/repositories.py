@@ -2,6 +2,7 @@ from django.conf import settings
 import pymongo
 from weather.exception import WeatherException
 from pymongo.errors import ConnectionFailure
+from bson import ObjectId
 
 class WeatherRepository:
 
@@ -26,11 +27,25 @@ class WeatherRepository:
         return collection
     
     def getAll(self):
-        document = self.getColletion().find({})
+        document = []
+        for doc in self.getColletion().find({}):
+            id = doc.pop('_id')
+            doc['id'] = str(id)
+            print(doc)
+            document.append(doc)
+        return document
+    
+    def getByID(self, id):
+        document = self.getColletion().find_one({"_id": ObjectId(id)})
+        id = document.pop('_id')
+        document['id'] = str(id)
         return document
     
     def insert(self, document):
         self.getColletion().insert_one(document)
+
+    def update(self, document, id):
+        self.getColletion().update_one({"_id": ObjectId(id)}, {"$set":document})
 
     def delete(self, document) -> None:
         self.getColletion().delete_one(document)

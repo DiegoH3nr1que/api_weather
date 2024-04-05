@@ -11,8 +11,13 @@
   {% for weather in weathers %}
   <div class="col-md-4 mb-4">
     <div class="card h-100">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header bg-primary text-white d-flex justify-content-between">
         <h5 class="mb-0">Temperatura: {{ weather.temperature }}</h5>
+        <div>
+          <a href="{% url 'Weather Edit' weather.id %}" class="link-dark link-offset-2 link-underline-opacity-0"><i class="bi-box-arrow-in-down-left"></i></a>
+          
+          <i class="bi-backspace-fill"></i>
+        </div>
       </div>
       <div class="card-body">
         <p class="card-text">
@@ -22,14 +27,6 @@
           Umidade: {{ weather.humidity }} <br />
           Tempo: {{ weather.weather }} <br />
         </p>
-      </div>
-      <div class="card-footer bg-light">
-        <button class="btn btn-danger btn-sm float-right" type="submit">
-          Delete
-        </button>
-        <button class="btn btn-sm float-right" type="submit">
-          Edit
-        </button>
       </div>
     </div>
   </div>
