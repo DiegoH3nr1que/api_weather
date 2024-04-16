@@ -13,34 +13,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   </head>
   <body>
-    <header
-      class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom"
-    >
-      <a
-        href="/"
-        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
-      >
-        <svg class="bi me-2" width="40" height="32">
-          <use xlink:href="#bootstrap" />
-        </svg>
-        <span class="fs-4"
-          >Weather APP: Stay Ahead, Rain or Shine: Your Forecast, Your
-          Way!</span
-        >
-      </a>
-
-      <ul class="nav nav-pills">
-        <li class="nav-item">
-          <a href="{% url 'Weather Insert' %}" class="nav-link">Insert</a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'Weather Generate' %}" class="nav-link">Generate</a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'Weather Reset' %}" class="nav-link">Reset</a>
-        </li>
-      </ul>
-    </header>
     <main>
       <div class="container">{% block content %} {% endblock %}</div>
       <!-- <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog" id="modalSheet">
