@@ -2,6 +2,13 @@
 {% block content %}
 
 <h1>Climate Data</h1>
+<div>
+  <form action="{% url 'Weather Filter' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="">city:</label>
+    <input type="text" id="city" name="city"></input>
+    <input type="submit" value="Filter"/>
+</div>
 
 {% if error %}
 <div class="alert alert-danger" role="alert">{{ error }}</div>
@@ -16,8 +23,8 @@
         <div>
           <a href="{% url 'Weather Edit' weather.id %}" class="link-dark link-offset-2 link-underline-opacity-0"><i class="bi-box-arrow-in-down-left"></i></a>
           
-          <i class="bi-backspace-fill"></i>
-        </div>
+          <a href="{% url 'Weather Delete' weather.id %}" class="link-dark link-offset-2 link-underline-opacity-0"><i class="bi-backspace-fill"></i></a>
+        </div> 
       </div>
       <div class="card-body">
         <p class="card-text">

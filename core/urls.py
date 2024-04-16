@@ -8,5 +8,6 @@ urlpatterns = [
     path('reset', WeatherReset.as_view(), name= "Weather Reset"),
     path('insert', WeatherInsert.as_view(), name= "Weather Insert"),
     path('delete/<id>', WeatherDelete.as_view(), name="Weather Delete"),
-    path('edit/<id>', WeatherEdit.as_view(), name="Weather Edit")
+    path('edit/<id>', WeatherEdit.as_view(), name="Weather Edit"),
+    path('filter', WeatherFilter.as_view(), name="Weather Filter")
 ]

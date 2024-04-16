@@ -46,9 +46,22 @@ class WeatherRepository:
 
     def update(self, document, id):
         self.getColletion().update_one({"_id": ObjectId(id)}, {"$set":document})
-
-    def delete(self, document) -> None:
-        self.getColletion().delete_one(document)
-
+    
     def deleteAll(self):
         self.getColletion().delete_many({})
+
+    def deleteById(self, id) -> None:
+       ret = self.getColletion().delete_one({"_id": ObjectId(id)})
+       return ret.deleted_count
+    
+    def getByCity(self, filter) -> None:
+        documents = []
+        for document in self.getColletion().find(filter):
+            id = document.pop('_id')
+            document['id'] = str(id)
+            documents.append(document)
+        return documents
+
+
+    
+

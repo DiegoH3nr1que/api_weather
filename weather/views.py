@@ -74,13 +74,11 @@ class WeatherInsert(View):
         return redirect('Weather View')
     
 class WeatherDelete(View):
-    def delete(self, request, id):
+    def get(self, request, id):
         # Obter o repositório de clima
         repository = WeatherRepository(collectionName='weathers')
-        
         # Excluir o registro de clima com o ID fornecido
-        repository.delete_one(id)
-        
+        repository.deleteById(id)
         # Redirecionar de volta para a página principal
         return redirect('Weather View')
 
@@ -88,7 +86,6 @@ class WeatherEdit(View):
     def get(self, request, id):
         repository = WeatherRepository(collectionName='weathers')
         weather = repository.getByID(id)
-        print(weather)
         weatherForm = WeatherForm(initial=weather)
         return render(request, "form_edit.html", {"form":weatherForm, "id": id})
     
@@ -106,3 +103,26 @@ class WeatherEdit(View):
             print(weatherForm.errors)
 
         return redirect('Weather View')
+    
+class WeatherFilter(View):
+    def post(self, request):
+        data = request.POST.dict()
+        data.pop('csrfmiddlewaretoken')
+
+        repository = WeatherRepository(collectionName='weathers')
+        try:
+            weathers = list(repository.getByCity(data))
+            serializer = WeatherSerializer(data=weathers, many=True)
+            if (serializer.is_valid()):
+                # print('Data: ')
+                # print(serializer.data)
+                modelWeather = serializer.save()
+                objectReturn = {"weathers":modelWeather}
+            else:
+                # print('Error: ')
+                # print(serializer.errors)
+                objectReturn = {"error":serializer.errors}
+        except WeatherException as e:
+            objectReturn = {"error":e.message}
+  
+        return render(request, "home.html", objectReturn)
