@@ -6,6 +6,7 @@ from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.views import View
 from django.shortcuts import render, redirect
+from user.authenticate import *
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -18,20 +19,23 @@ from .exception import WeatherException
 
 class WeatherView(View):
     
-    authentication_class = [JWTAuthentication]
     authenticate = False
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
-        try:
-            user, _ = self.authentication_classes[0].authenticate(request=request)
-            request.user = user
-            self.authentication = True
-        except Exception as e:
-            pass
+        #deverá vir de request
+        token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE3MTUyOTQxMTh9.i9FjP88tzpRqGiixmC8H0LboglscfQqqXMgvq18rHkI'
+
+        error_code, _ = verifyToken(token)
+
+        if error_code == 0:
+            user = getAuthenticateUser(token)
+            self.authenticate = True
+        else:
+            self.authenticate = False
+        
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        verse = main.get_bible_verse()
         repository = WeatherRepository(collectionName='weathers')
         try:
             weathers = list(repository.getAll())
@@ -40,13 +44,13 @@ class WeatherView(View):
                 # print('Data: ')
                 # print(serializer.data)
                 modelWeather = serializer.save()
-                objectReturn = {"weathers":modelWeather, "verse":verse}
+                objectReturn = {"weathers":modelWeather}
             else:
                 # print('Error: ')
                 # print(serializer.errors)
-                objectReturn = {"error":serializer.errors, "verse":verse}
+                objectReturn = {"error":serializer.errors}
         except WeatherException as e:
-            objectReturn = {"error":e.message, "verse":verse}
+            objectReturn = {"error":e.message}
 
         if not self.authenticate:
             objectReturn["errorAuth"] = "Usuário não autenticado"
@@ -55,18 +59,6 @@ class WeatherView(View):
         return render(request, "home.html", objectReturn)
 
 class WeatherGenerate(View):
-
-    authentication_class = [JWTAuthentication]
-    authenticate = False
-
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
-        try:
-            user, _ = self.authentication_classes[0].authenticate(request=request)
-            request.user = user
-            self.authentication = True
-        except Exception as e:
-            return redirect('Weather View')
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
         repository = WeatherRepository(collectionName='weathers')
@@ -85,18 +77,6 @@ class WeatherGenerate(View):
     
 class WeatherReset(View):
 
-    authentication_class = [JWTAuthentication]
-    authenticate = False
-
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
-        try:
-            user, _ = self.authentication_classes[0].authenticate(request=request)
-            request.user = user
-            self.authentication = True
-        except Exception as e:
-            return redirect('Weather View')
-        return super().dispatch(request, *args, **kwargs)
-
     def get(self, request): 
         repository = WeatherRepository(collectionName='weathers')
         repository.deleteAll()
@@ -104,18 +84,6 @@ class WeatherReset(View):
         return redirect('Weather View')
     
 class WeatherInsert(View):
-
-    authentication_class = [JWTAuthentication]
-    authenticate = False
-
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
-        try:
-            user, _ = self.authentication_classes[0].authenticate(request=request)
-            request.user = user
-            self.authentication = True
-        except Exception as e:
-            return redirect('Weather View')
-        return super().dispatch(request, *args, **kwargs)
     
     def get(self, request):
         weatherForm = WeatherForm()
@@ -138,18 +106,6 @@ class WeatherInsert(View):
     
 class WeatherDelete(View):
 
-    authentication_class = [JWTAuthentication]
-    authenticate = False
-
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
-        try:
-            user, _ = self.authentication_classes[0].authenticate(request=request)
-            request.user = user
-            self.authentication = True
-        except Exception as e:
-            return redirect('Weather View')
-        return super().dispatch(request, *args, **kwargs)
-
     def get(self, request, id):
         # Obter o repositório de clima
         repository = WeatherRepository(collectionName='weathers')
@@ -159,18 +115,6 @@ class WeatherDelete(View):
         return redirect('Weather View')
 
 class WeatherEdit(View):
-
-    authentication_class = [JWTAuthentication]
-    authenticate = False
-
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
-        try:
-            user, _ = self.authentication_classes[0].authenticate(request=request)
-            request.user = user
-            self.authentication = True
-        except Exception as e:
-            return redirect('Weather View')
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, id):
         repository = WeatherRepository(collectionName='weathers')
@@ -194,6 +138,7 @@ class WeatherEdit(View):
         return redirect('Weather View')
     
 class WeatherFilter(View):
+
     def post(self, request):
         data = request.POST.dict()
         data.pop('csrfmiddlewaretoken')

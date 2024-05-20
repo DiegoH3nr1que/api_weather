@@ -1,6 +1,4 @@
 #serializers.py
-from dataclasses import dataclass
-from datetime import datetime
 from rest_framework import serializers
 from .models import WeatherEntity
 
