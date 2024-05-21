@@ -1,0 +1,41 @@
+{% extends "main.html" %} {% block content %}
+
+<h1>List Users</h1>
+
+<div class="row">
+    {% for user in users %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between"
+        >
+          <h5 class="mb-0">Nome: {{ user.name }}</h5>
+          <div>
+            {% if not errorAuth %}
+            <a
+              href="{% url 'User Edit' user.id %}"
+              class="link-dark link-offset-2 link-underline-opacity-0"
+              ><i class="bi-box-arrow-in-down-left"></i
+            ></a>
+  
+            <a
+              href="{% url 'User Delete' user.id %}"
+              class="link-dark link-offset-2 link-underline-opacity-0"
+              ><i class="bi-backspace-fill"></i
+            ></a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+            Email: {{ user.email }} <br />
+            Username : {{ user.username }} <br />
+            Password : {{ weather.password }} <br />
+          </p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+{% endblock content %}

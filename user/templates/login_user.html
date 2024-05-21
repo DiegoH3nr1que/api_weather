@@ -1,0 +1,86 @@
+{% extends "user.html" %} 
+{% block content %}
+
+<style>
+  body {
+    background-color: #f8f9fa; /* Cor de fundo do corpo */
+    font-family: 'Poppins', sans-serif; /* Fonte de texto */
+  }
+
+  .card {
+    background-color: #ffffff; /* Cor de fundo do cartão */
+    border-radius: 15px; /* Cantos arredondados do cartão */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Sombra do cartão */
+  }
+
+  .card-title {
+    color: #007bff; /* Cor do título do cartão */
+    font-size: 2rem; /* Tamanho da fonte do título do cartão */
+    font-weight: bold; /* Peso da fonte do título do cartão */
+    margin-bottom: 1.5rem; /* Espaçamento inferior do título do cartão */
+    font-family: 'Poppins', sans-serif; /* Fonte de texto */
+  }
+
+  .btn-primary {
+    background-color: #007bff; /* Cor de fundo do botão primário */
+    border-color: #007bff; /* Cor da borda do botão primário */
+    font-weight: bold; /* Peso da fonte do botão primário */
+    font-size: 1rem; /* Tamanho da fonte do botão primário */
+    padding: 0.75rem 2rem; /* Preenchimento do botão primário */
+    transition: all 0.3s ease; /* Transição suave */
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3; /* Cor de fundo do botão primário ao passar o mouse */
+    border-color: #0056b3; /* Cor da borda do botão primário ao passar o mouse */
+  }
+
+  .card-footer {
+    color: #6c757d; /* Cor do texto do rodapé do cartão */
+    font-size: 0.9rem; /* Tamanho da fonte do rodapé do cartão */
+    margin-top: 1.5rem; /* Espaçamento superior do rodapé do cartão */
+  }
+
+  .card-footer a {
+    color: #007bff; /* Cor do link no rodapé do cartão */
+    text-decoration: none; /* Remover sublinhado do link no rodapé do cartão */
+    transition: all 0.3s ease; /* Transição suave */
+  }
+
+  .card-footer a:hover {
+    text-decoration: underline; /* Adicionar sublinhado ao passar o mouse sobre o link no rodapé do cartão */
+  }
+</style>
+
+<h1 class="text-center mt-5">Weather application</h1>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Login User</h2>
+          <form action="{% url 'User Login' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-4 text-center">
+              {% for field in form %}
+                <div class="mb-3">
+                  <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                  {{ field }}
+                </div>
+              {% endfor %}
+            </div>
+            <div class="text-center"> <!-- Centraliza o botão -->
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          Don't have an account? <a href="{% url 'User Create' %}" class="text-decoration-none">Create one</a>
+        </div> <!-- Adiciona o link para criar uma nova conta -->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
