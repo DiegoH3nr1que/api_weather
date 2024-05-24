@@ -24,7 +24,7 @@
     <li class="nav-item">
       <a href="{% url 'Weather Reset' %}" class="nav-link">Reset</a>
     </li>
-    <li class="nav-item"><a href="#" class="nav-link">Logout</a></li>
+    <li class="nav-item"><a href="{% url 'UnAuth' %}" class="nav-link">Logout</a></li>
     {% else %}
     <li class="nav-item">
       <a href="{% url 'User Create' %}" class="nav-link">Register</a>

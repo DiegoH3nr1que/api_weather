@@ -2,20 +2,44 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 
+
+from .authenticate import *
 from user.forms import UserForm, UserLoginForm
 from .authenticate import *
 from .serializer import UserSerializer
 from .repositories import UserRepository
 from .exception import UserException
 
-class UserTokenizer(View):
-    # método deveria ser POST pois deverá receber usuário e senha   
-    def get(self, request):
-        user = authenticate(username="user", password="a1b2c3")
-        if user:
-            return HttpResponse(generate_token(user))
-        return HttpResponse("Username and/or password incorret")
-    
+class AuthLogin(View):
+  def post(self, request):
+      user = authenticate(username ='user', password='a1b2c3')
+      if user:
+        token = generate_token(user)
+        response = redirect('Weather View')
+        response.set_cookie('jwt', token)
+        
+        return response
+
+      return redirect('Weather View')
+
+
+  def get(self, request):
+      user = authenticate(username ='user', password='a1b2c3')
+      if user:
+        token = generate_token(user)
+        response = redirect('Weather View')
+        response.set_cookie('jwt', token)
+        
+        return response
+
+      return redirect('Weather View')
+  
+class AuthLogout(View):
+    def get(sekf, request):
+        response = redirect('Weather View')
+        response.delete_cookie('jwt')
+        return response
+
 
 class UserView(View):
     def get(self, request):

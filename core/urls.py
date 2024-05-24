@@ -16,5 +16,7 @@ urlpatterns = [
     path('user', UserView.as_view(), name="User View"),
     path('user/delete<id>', UserDelete.as_view(), name="User Delete"),
     path('user/edit<id>', UserCreate.as_view(), name="User Edit"),
-    path('token', UserTokenizer.as_view(), name="User Token")
+
+    path('login', AuthLogin.as_view(), name="Auth"),
+    path('logout', AuthLogout.as_view(), name="UnAuth")
 ]

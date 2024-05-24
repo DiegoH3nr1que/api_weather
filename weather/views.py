@@ -20,15 +20,18 @@ from .exception import WeatherException
 class WeatherView(View):
     
     authenticate = False
+    user = None
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
         #deverá vir de request
-        token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE3MTUyOTQxMTh9.i9FjP88tzpRqGiixmC8H0LboglscfQqqXMgvq18rHkI'
+        # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE3MTUyOTQxMTh9.i9FjP88tzpRqGiixmC8H0LboglscfQqqXMgvq18rHkI'
+
+        token = request.COOKIES.get('jwt')
 
         error_code, _ = verifyToken(token)
 
         if error_code == 0:
-            user = getAuthenticateUser(token)
+            self.user = getAuthenticateUser(token)
             self.authenticate = True
         else:
             self.authenticate = False
@@ -56,7 +59,16 @@ class WeatherView(View):
             objectReturn["errorAuth"] = "Usuário não autenticado"
         print(objectReturn)
 
-        return render(request, "home.html", objectReturn)
+        response = render(request, "home.html", objectReturn)
+
+        if self.user is not None:
+            newToken = refreshToken(self.user)
+            print(newToken)
+            response.set_cookie('jwt', newToken)
+
+        return response
+
+        
 
 class WeatherGenerate(View):
 
